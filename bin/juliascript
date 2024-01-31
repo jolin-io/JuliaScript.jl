@@ -1,0 +1,36 @@
+#! /usr/bin/env bash
+JuliaScriptEnvironment="$HOME/.julia/environments/JuliaScript"
+if [ ! -d "$JuliaScriptEnvironment" ]; then
+    echo creating JuliaScript julia environment at "$JuliaScriptEnvironment"
+    # TODO activate production, remove development version
+    # julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.add("JuliaScript")'
+    julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.develop(path=expanduser("~/.julia/dev/JuliaScript"))'
+fi
+
+script_name="$(basename $1)"
+trimsuffix=".jl"
+if [[ $script_name == *"$trimsuffix" ]]; then
+    script_name="${script_name%"$trimsuffix"}"
+fi
+
+export JULIASCRIPT_CACHE_HASH=($(sha256sum "$1"))
+export JULIASCRIPT_CACHE_NAME="script_${script_name}_$JULIASCRIPT_CACHE_HASH"
+export JULIASCRIPT_CACHE_PATH="$HOME/.julia/scripts_cache/$JULIASCRIPT_CACHE_NAME"
+
+echo JuliaScriptEnvironment=\"$JuliaScriptEnvironment\"
+echo JULIASCRIPT_CACHE_NAME=\"$JULIASCRIPT_CACHE_NAME\"
+echo JULIASCRIPT_CACHE_PATH=\"$JULIASCRIPT_CACHE_PATH\"
+
+if [ ! -d "$JULIASCRIPT_CACHE_PATH" ]; then
+    # if no precompilation project exists, we create one
+    # no shift, as JuliaScript needs to know the script path
+    echo 'julia --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.julia_main()"' -- "$@"
+    julia --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.julia_main()" -- "$@"
+else
+    # we do this in bash so that only a single julia instance needs to be started (starting julia can take some time)
+    shift  # skip first argument (the file path)
+    julia --project="$JULIASCRIPT_CACHE_PATH" -e "import $JULIASCRIPT_CACHE_NAME; $JULIASCRIPT_CACHE_NAME.julia_main()" -- "$@"
+
+    # TODO create packagecompiler.jl app for super fast startup speed?
+    # this takes ages for compilation... not really optimal
+fi
