@@ -1,10 +1,20 @@
 #! /usr/bin/env bash
 JuliaScriptEnvironment="$HOME/.julia/environments/JuliaScript"
 if [ ! -d "$JuliaScriptEnvironment" ]; then
-    echo creating JuliaScript julia environment at "$JuliaScriptEnvironment"
+    # echo creating JuliaScript julia environment at "$JuliaScriptEnvironment"
     # TODO activate production, remove development version
-    # julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.add("JuliaScript")'
-    julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.develop(path=expanduser("~/.julia/dev/JuliaScript"))'
+    if [ -z "$JULIASCRIPT_PKG_DEVELOP" ]; then
+        julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.add("JuliaScript")'
+    else
+        julia --project="$JuliaScriptEnvironment" -e 'import Pkg; Pkg.develop(path=expanduser("~/.julia/dev/JuliaScript"))'
+    fi
+fi
+
+# support special packagecompile command for running packagecompiler
+FLAG_PACKAGECOMPILE=""
+if [ "$1" == "packagecompile" ] || [ "$1" == "packagecompiler" ] ; then
+    FLAG_PACKAGECOMPILE="true"
+    shift  # skip first argument
 fi
 
 script_name="$(basename $1)"
@@ -16,21 +26,40 @@ fi
 export JULIASCRIPT_CACHE_HASH=($(sha256sum "$1"))
 export JULIASCRIPT_CACHE_NAME="script_${script_name}_$JULIASCRIPT_CACHE_HASH"
 export JULIASCRIPT_CACHE_PATH="$HOME/.julia/scripts_cache/$JULIASCRIPT_CACHE_NAME"
+JULIASCRIPT_COMPILED_SYSIMAGE="$JULIASCRIPT_CACHE_PATH/sysimage.so"
 
-echo JuliaScriptEnvironment=\"$JuliaScriptEnvironment\"
-echo JULIASCRIPT_CACHE_NAME=\"$JULIASCRIPT_CACHE_NAME\"
-echo JULIASCRIPT_CACHE_PATH=\"$JULIASCRIPT_CACHE_PATH\"
+# The following are only needed for apps, but we use sysimages for less storage overhead 
+# JULIASCRIPT_COMPILED_NAME="compiled_${script_name}_$JULIASCRIPT_CACHE_HASH"
+# JULIASCRIPT_COMPILED_PATH="$HOME/.julia/scripts_cache/$JULIASCRIPT_COMPILED_NAME"
+# JULIASCRIPT_COMPILED_EXE="$JULIASCRIPT_COMPILED_PATH/bin/$JULIASCRIPT_CACHE_NAME"
 
-if [ ! -d "$JULIASCRIPT_CACHE_PATH" ]; then
+if [ ! -z "$FLAG_PACKAGECOMPILE" ]; then
+    # environment variables are enough, no args needed
+    julia -q --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.create_sysimage()"
+
+elif [ ! -d "$JULIASCRIPT_CACHE_PATH" ]; then
     # if no precompilation project exists, we create one
     # no shift, as JuliaScript needs to know the script path
-    echo 'julia --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.julia_main()"' -- "$@"
-    julia --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.julia_main()" -- "$@"
+    julia -q --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.julia_main()" -- "$@"
+
+    # the added precompilation will automatically be precompiled on the next run but for a better user experience we do the precompilation already here
+    # precompilation needs the correct packages to be on the load-path, hence we need to start another julia process      
+    nohup julia -q --project="$JULIASCRIPT_CACHE_PATH" -e "import var\"$JULIASCRIPT_CACHE_NAME\"" </dev/null &>/dev/null &
+
+    # It may make sense to also trigger packagecompile in the background every time a script is created the first time.
+    # (a tiny example script needed less then 5 minutes for packagecompile to finish, so this could make sense).
+    # Hidden behind an environment variable flag
+    if [ ! -z "$JULIASCRIPT_PACKAGECOMPILE_ALWAYS" ]; then
+        nohup julia -q --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.create_sysimage()" </dev/null &>/dev/null &
+    fi
+
+elif [ -f "$JULIASCRIPT_COMPILED_SYSIMAGE" ]; then
+    # use packagecompiled sysimage if it exists
+    shift  # skip first argument (the file path)
+    julia -q --sysimage="$JULIASCRIPT_COMPILED_SYSIMAGE" -e "var\"$JULIASCRIPT_CACHE_NAME\".julia_main()" -- "$@"
+
 else
     # we do this in bash so that only a single julia instance needs to be started (starting julia can take some time)
     shift  # skip first argument (the file path)
-    julia --project="$JULIASCRIPT_CACHE_PATH" -e "import $JULIASCRIPT_CACHE_NAME; $JULIASCRIPT_CACHE_NAME.julia_main()" -- "$@"
-
-    # TODO create packagecompiler.jl app for super fast startup speed?
-    # this takes ages for compilation... not really optimal
+    julia -q --project="$JULIASCRIPT_CACHE_PATH" -e "import $JULIASCRIPT_CACHE_NAME; $JULIASCRIPT_CACHE_NAME.julia_main()" -- "$@"
 fi

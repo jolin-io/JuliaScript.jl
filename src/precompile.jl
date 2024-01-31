@@ -2,7 +2,7 @@ module PrecompileStagingArea
 
     for (_pkgid, _mod) in Base.loaded_modules
         if !(_pkgid.name in ("Main", "Core", "Base"))
-            eval(:(const $(Symbol(_mod)) = $_mod))
+            @eval const $(Symbol(_mod)) = $_mod
         end
     end
 
