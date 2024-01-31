@@ -8,7 +8,7 @@ Welcome to `juliascript`! It is build for exactly that purpose.
 
 ## Installation
 
-1. Make sure [`julia` is installed via juliaup](https://github.com/JuliaLang/juliaup)
+1. Make sure `julia` is installed via [juliaup](https://github.com/JuliaLang/juliaup)
 2. Then run the following in a linux bash terminal
   ```bash
   curl -o ~/.juliaup/bin/juliascript -fsSL https://raw.githubusercontent.com/jolin-io/JuliaScript.jl/main/bin/juliascript
@@ -19,12 +19,12 @@ Now you can run `juliascript yourscript.jl` on the terminal, or use the shebang 
 
 ## How it works
 
-- The first time `juliascript` runs `yourscript.jl` it will create a corresponding julia module and track all precompile statements from the actual run.
+- The first time `juliascript yourscript.jl` runs `yourscript.jl` it will create a corresponding julia module and track all precompile statements from the actual run.
 - From the second time onwards it will then run as fast as julia's precompilation system allows for it
 
 
 ## Further speedup
-Sometimes the speedup this gives may not be satisfying. Then you can manually create a **sysimage** to improve performance even further. Just do
+Sometimes the speedup this gives may not be satisfying. Then you can manually create a **sysimage** to improve performance even further.
 ```bash
 juliascript packagecompile yourscript.jl
 ```
