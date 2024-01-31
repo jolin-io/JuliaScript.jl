@@ -11,6 +11,7 @@ if Sys.islinux()
 
         # always start with clean caching directory
         rm(cache_path, recursive=true, force=true)
+        @test !isdir(cache_path)
 
         target = strip("""
         9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08
@@ -21,16 +22,17 @@ if Sys.islinux()
 
         # run first time
         @test readchomp(`bash $exe_file $script_file 42`) == target
+        @test isdir(cache_path)
 
         # run second time
         @test readchomp(`bash $exe_file $script_file 42`) == target
 
-        # packagecompile
-        @test readchomp(`bash $exe_file packagecompile $script_file`) == target
-
-        # run again
+        # run after packagecompile
+        readchomp(`bash $exe_file packagecompile $script_file`)
+        @test isfile(joinpath(cache_path, "sysimage.so"))
         @test readchomp(`bash $exe_file $script_file 42`) == target
+        
 
-        # TODO compare timings? they should always be in order kind of
+        # TODO compare timings? they should always be in order (kind of)
     end
 end

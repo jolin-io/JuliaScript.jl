@@ -8,7 +8,7 @@ function myhash(script_content)
 end
 
 function get_cache_name(script_path)
-    content = readchomp(script_path)
+    content = read(script_path, String)
     get_cache_name(script_path, content)
 end
 

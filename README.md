@@ -2,14 +2,14 @@
 
 [![Build Status](https://github.com/jolin-io/JuliaScript.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jolin-io/JuliaScript.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-## You have a julia script.jl and want to run it fast?
+**You have a julia script.jl and want to run it fast?** Welcome to `juliascript`! It is build for exactly that purpose.
 
-Welcome to `juliascript` which was build for exactly that purpose.
+## Installlation
 
 1. Make sure [`julia` is installed via juliaup](https://github.com/JuliaLang/juliaup)
 2. Then run the following in a linux bash terminal
   ```bash
-  curl -o ~/.juliaup/bin/juliascript -fsSL 
+  curl -o ~/.juliaup/bin/juliascript -fsSL https://raw.githubusercontent.com/jolin-io/JuliaScript.jl/main/bin/juliascript
   chmod +x ~/.juliaup/bin/juliascript
   ```
 
