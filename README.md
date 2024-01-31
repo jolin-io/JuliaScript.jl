@@ -28,7 +28,11 @@ juliascript packagecompile yourscript.jl
 ```
 Depending on your script this may take from 5 minutes up to 30 minutes.
 
-> **EXPERIMENTAL CONFIG.** You can set the environment variable `export JULIASCRIPT_PACKAGECOMPILE_ALWAYS=true` so that packagecompile will be called automatically in the background as soon as `juliascript` is run on a new script.jl.
+> **EXPERIMENTAL CONFIG.** You can enable `JULIASCRIPT_PACKAGECOMPILE_ALWAYS` by setting the environment variable like
+> ```bash
+> export JULIASCRIPT_PACKAGECOMPILE_ALWAYS=true
+> ```
+> Then `juliascript` will automatically packagecompile a new script in the background after its first run.
 
 
 
