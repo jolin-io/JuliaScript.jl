@@ -2,7 +2,9 @@
 
 [![Build Status](https://github.com/jolin-io/JuliaScript.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/jolin-io/JuliaScript.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
-**You have a julia script.jl and want to run it fast?** Welcome to `juliascript`! It is build for exactly that purpose.
+**You have a julia script.jl and want to run it fast?** 
+
+Welcome to `juliascript`! It is build for exactly that purpose.
 
 ## Installlation
 
