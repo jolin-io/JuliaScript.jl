@@ -8,26 +8,6 @@ include("Helpers.jl")
 using .Helpers
 
 
-function create_app()
-    cache_name = get(ENV, "JULIASCRIPT_CACHE_NAME") do 
-        script_path = abspath(expanduser(ARGS[1]))
-        assert_isfile(script_path)
-        get_cache_name(script_path)
-    end
-    cache_path = get(ENV, "JULIASCRIPT_CACHE_PATH", get_cache_path(cache_name))
-
-    precompile_statements_file = joinpath(cache_path, "src", "precompile_statements.jl") 
-    if !isfile(precompile_statements_file) || filesize(precompile_statements_file) <= 0
-        @error "Please run juliascript once normally, so that the precompile statements needed for PackageCompiler are constructed."
-        exit(1)
-    end
-
-    compiled_name = get_compiled_name(cache_name)
-    compiled_path = get_cache_path(compiled_name)
-    PackageCompiler.create_app(cache_path, compiled_path; incremental=true, cpu_target="native", precompile_statements_file)
-end
-
-
 function create_sysimage()
     cache_name = get(ENV, "JULIASCRIPT_CACHE_NAME") do 
         script_path = abspath(expanduser(ARGS[1]))

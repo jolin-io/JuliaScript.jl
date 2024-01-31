@@ -28,11 +28,6 @@ export JULIASCRIPT_CACHE_NAME="script_${script_name}_$JULIASCRIPT_CACHE_HASH"
 export JULIASCRIPT_CACHE_PATH="$HOME/.julia/scripts_cache/$JULIASCRIPT_CACHE_NAME"
 JULIASCRIPT_COMPILED_SYSIMAGE="$JULIASCRIPT_CACHE_PATH/sysimage.so"
 
-# The following are only needed for apps, but we use sysimages for less storage overhead 
-# JULIASCRIPT_COMPILED_NAME="compiled_${script_name}_$JULIASCRIPT_CACHE_HASH"
-# JULIASCRIPT_COMPILED_PATH="$HOME/.julia/scripts_cache/$JULIASCRIPT_COMPILED_NAME"
-# JULIASCRIPT_COMPILED_EXE="$JULIASCRIPT_COMPILED_PATH/bin/$JULIASCRIPT_CACHE_NAME"
-
 if [ ! -z "$FLAG_PACKAGECOMPILE" ]; then
     # environment variables are enough, no args needed
     julia -q --project="$JuliaScriptEnvironment" -e "import JuliaScript; JuliaScript.create_sysimage()"
