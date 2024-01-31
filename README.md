@@ -28,11 +28,10 @@ juliascript packagecompile yourscript.jl
 ```
 Depending on your script this may take from 5 minutes up to 30 minutes.
 
-> **EXPERIMENTAL CONFIG.** You can enable `JULIASCRIPT_PACKAGECOMPILE_ALWAYS` by setting the environment variable like
-> ```bash
-> export JULIASCRIPT_PACKAGECOMPILE_ALWAYS=true
-> ```
-> Then `juliascript` will automatically packagecompile a new script in the background after its first run.
+### Experimental environment variables
+- `JULIASCRIPT_PACKAGECOMPILE_ALWAYS=true`
+  
+  If set, `juliascript myscript.jl` will automatically packagecompile a new or changed `myscript.jl`. The creation of the sysimage is run in the background, consuming compute resources, but otherwise it is not blocking the script execution. 
 
 
 
