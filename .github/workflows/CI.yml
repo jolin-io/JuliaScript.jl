@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     branches:
@@ -6,11 +7,21 @@ on:
     tags: ['*']
   pull_request:
   workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+    working-directory: ~/.julia/dev/JuliaScript
+
+env:
+  JULIASCRIPT_PKG_DEVELOP: true
+
 concurrency:
   # Skip intermediate builds: always.
   # Cancel intermediate builds: only if it is a pull request build.
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/pull/') }}
+
 jobs:
   test:
     name: Julia ${{ matrix.version }} - ${{ matrix.os }} - ${{ matrix.arch }} - ${{ github.event_name }}
