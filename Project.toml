@@ -1,7 +1,7 @@
 name = "JuliaScript"
 uuid = "eac5aaee-ac7f-40cd-ab88-b72e0a6c4bd0"
 authors = ["Stephan Sahm <stephan.sahm@jolin.io> and contributors"]
-version = "1.0.0-DEV"
+version = "0.1.0"
 
 [deps]
 PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
