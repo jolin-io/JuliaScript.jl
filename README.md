@@ -6,7 +6,7 @@
 
 Welcome to `juliascript`! It is build for exactly that purpose.
 
-## Installlation
+## Installation
 
 1. Make sure [`julia` is installed via juliaup](https://github.com/JuliaLang/juliaup)
 2. Then run the following in a linux bash terminal
