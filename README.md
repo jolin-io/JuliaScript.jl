@@ -19,8 +19,8 @@ Now you can run `juliascript yourscript.jl` on the terminal, or use the shebang 
 
 ## How it works
 
-- The first time `juliascript yourscript.jl` runs `yourscript.jl` it will create a corresponding julia module and track all precompile statements from the actual run.
-- From the second time onwards it will then run as fast as julia's precompilation system allows for it
+- The first time `juliascript yourscript.jl` runs `yourscript.jl`, it will create a corresponding julia module and track all precompile statements from the actual run.
+- From the second time onwards, it will then run as fast as julia's precompilation system allows for it.
 
 
 ## Further speedup
@@ -29,6 +29,8 @@ Sometimes the speedup this gives may not be satisfying. Then you can manually cr
 juliascript packagecompile yourscript.jl
 ```
 Depending on your script this may take from 5 minutes up to 30 minutes.
+
+Every further call `juliascript yourscript.jl` will then use the sysimage (until you make a change to yourscript.jl).
 
 ### Experimental environment variables
 - `JULIASCRIPT_PACKAGECOMPILE_ALWAYS=true`
