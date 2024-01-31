@@ -45,7 +45,7 @@ jobs:
       - uses: julia-actions/cache@v1
       - uses: julia-actions/julia-buildpkg@v1
       - name: symlink the folder to ~/.julia/dev/JuliaScript for it to be picked up juliascript
-        run: mkdir -p ~/.julia/dev; ln -s $PWD ~/.julia/dev/JuliaScript
+        run: mkdir -p ~/.julia/dev; ln -s "$PWD" ~/.julia/dev/JuliaScript
       - uses: julia-actions/julia-runtest@v1
         env:
           JULIASCRIPT_PKG_DEVELOP: true  # enables the use of ~/.julia/dev/JuliaScript
