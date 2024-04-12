@@ -23,7 +23,7 @@ Now you can run `juliascript yourscript.jl` on the terminal, or use the shebang 
 - From the second time onwards, it will then run as fast as julia's precompilation system allows for it.
 
 
-## Further speedup
+### Further speedup
 Sometimes the speedup this gives may not be satisfying. Then you can manually create a **sysimage** to improve performance even further.
 ```bash
 juliascript packagecompile yourscript.jl
