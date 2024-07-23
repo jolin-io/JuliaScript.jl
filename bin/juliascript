@@ -56,5 +56,5 @@ elif [ -f "$JULIASCRIPT_COMPILED_SYSIMAGE" ]; then
 else
     # we do this in bash so that only a single julia instance needs to be started (starting julia can take some time)
     shift  # skip first argument (the file path)
-    julia -q --project="$JULIASCRIPT_CACHE_PATH" -e "import $JULIASCRIPT_CACHE_NAME; $JULIASCRIPT_CACHE_NAME.julia_main()" -- "$@"
+    julia -q --project="$JULIASCRIPT_CACHE_PATH" -e "import var\"$JULIASCRIPT_CACHE_NAME\"; var\"$JULIASCRIPT_CACHE_NAME\".julia_main()" -- "$@"
 fi
