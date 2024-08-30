@@ -42,7 +42,7 @@ jobs:
         with:
           version: ${{ matrix.version }}
           arch: ${{ matrix.arch }}
-      - uses: julia-actions/cache@v1
+      - uses: julia-actions/cache@v2
       - uses: julia-actions/julia-buildpkg@v1
       - name: symlink the folder to ~/.julia/dev/JuliaScript for it to be picked up juliascript
         run: mkdir -p ~/.julia/dev; ln -s "$PWD" ~/.julia/dev/JuliaScript
