@@ -11,8 +11,8 @@ Welcome to `juliascript`! It is built for exactly that purpose.
 1. Make sure `julia` is installed via [juliaup](https://github.com/JuliaLang/juliaup)
 2. Then run the following in a Linux bash terminal
   ```bash
-  curl -o ~/.julia/juliaup/bin/juliascript -fsSL https://raw.githubusercontent.com/jolin-io/JuliaScript.jl/main/bin/juliascript
-  chmod +x ~/.julia/juliaup/bin/juliascript
+  curl -o ~/.juliaup/bin/juliascript -fsSL https://raw.githubusercontent.com/jolin-io/JuliaScript.jl/main/bin/juliascript
+  chmod +x ~/.juliaup/bin/juliascript
   ```
 
 Now you can run `juliascript yourscript.jl` on the terminal, or use the shebang `#!/usr/bin/env juliascript` as the first line of your exectuable script.
